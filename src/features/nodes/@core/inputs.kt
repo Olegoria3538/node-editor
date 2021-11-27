@@ -3,10 +3,12 @@ package GUISamples.features.nodes.`@core`
 import javafx.scene.control.TextField
 
 
-class CreateInputCore<T>(val name: String,
-                         val type: String,
-                         onChange: ((x: String) -> T),
-                         initValue: T) {
+class CreateInputCore<T>(
+    val name: String,
+    val type: String,
+    onChange: ((x: String) -> T),
+    initValue: T
+) {
     val input = TextField(initValue.toString())
     var value = initValue
 

@@ -3,20 +3,13 @@ package GUISamples.features.nodes.`@core`
 import javafx.scene.control.Button
 
 
-class CoreSimpleInput <T> (input: CreateInputCore<T>)  {
-    val node = CoreNode(updater = null)
+class CoreSimpleInput <T> (input: CreateInputCore<T>, outType: String)  {
+    val node = CoreNode(outType)
     init {
-        node.outValue = input.value
+        node.updateOutValue(input.value as Any)
         input.addWatcher { x ->
-            node.outValue = x
-            node.triggerSubcribes()
+            node.updateOutValue(x as Any)
         }
-
-
         node.centerBox.children.add(input.input);
-
-        node.leftBox.children.add(Button());
-        node.leftBox.children.add(Button());
-        node.leftBox.children.add(Button());
     }
 }
