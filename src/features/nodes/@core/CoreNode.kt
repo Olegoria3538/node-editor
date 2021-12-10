@@ -1,6 +1,6 @@
 package GUISamples.features.nodes.`@core`
 
-import GUISamples.features.nodes.model.selectNode
+import GUISamples.features.nodes.model.*
 import GUISamples.features.nodes.utils.createRandomId
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -32,17 +32,11 @@ open class CoreNode (val outType: String) {
     var outValue: Any? = null
     val out = Button()
 
-    private val wathchers = mutableSetOf<((x: Any) -> Unit)>()
-    fun addWatcher(x: ((x: Any) -> Unit)) {
-        wathchers.add ( x )
-    }
+    val inputMetrics = mutableMapOf<String, InputMetric>()
 
     fun updateOutValue(x: Any?) {
         outValue = x
-        println(wathchers)
-        wathchers.forEach {fn ->
-            fn(outValue as Any)
-        }
+        shakeTree(this)
     }
 
     fun typeToColor(type: String): Color {
@@ -54,21 +48,20 @@ open class CoreNode (val outType: String) {
         }
     }
 
-    fun addInputMetrics(name: String, type: String, fn: (x: Any?) -> Unit) {
-        val color = typeToColor(type)
-        val btn = Button(name)
+    fun addInputMetrics(metric: InputMetric) {
+        inputMetrics.put(metric.name, metric)
+        val color = typeToColor(metric.type)
+        val btn = metric.btn
         btn.setBackground(Background(BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)))
         btn.onAction = EventHandler {
-            if (selectNode.node != null && selectNode.node != this && selectNode.node!!.outType == type) {
-                selectNode.node!!.addWatcher(fn)
-                selectNode.node!!.out.setStyle("");
-                fn(selectNode.node!!.outValue)
-                selectNode.removeSelectNode();
-
+            if (selectNode.node != null && selectNode.node != this && selectNode.node!!.outType == metric.type) {
+                addSubscribe(selectNode.node!!, this, metric.name)
+                selectNode.node!!.out.setStyle("")
+                metric.fn(selectNode.node!!.outValue)
+                selectNode.removeSelectNode()
             }
         }
         leftBox.children.add(btn);
-
     }
 
     init {
@@ -91,6 +84,7 @@ open class CoreNode (val outType: String) {
                 (localCoords.x),
                 (localCoords.y)
             )
+            upgradeLinesPosition(this)
             event.consume()
         }
 
@@ -117,6 +111,8 @@ open class CoreNode (val outType: String) {
             out.setStyle("-fx-border-color: #f48225; -fx-border-width: 3px;");
         }
         rightBox.children.add(out);
+
+        addNode(this)
     }
 }
 

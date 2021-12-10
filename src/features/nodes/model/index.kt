@@ -1,7 +1,12 @@
 package GUISamples.features.nodes.model
 import GUISamples.features.nodes.`@core`.CoreNode
+import GUISamples.features.nodes.`@core`.BoundLine
+import javafx.scene.layout.AnchorPane
 
-val graphs = mutableMapOf<CoreNode, MutableSet<CoreNode>>();
+val mainRoot = AnchorPane()
+
+val graphs = mutableMapOf<CoreNode, MutableMap<CoreNode, String>>();
+val lines = mutableMapOf<CoreNode, MutableSet<BoundLine>>();
 
 class CreateSelectNode {
     var node : CoreNode? = null
@@ -16,13 +21,25 @@ class CreateSelectNode {
 val selectNode = CreateSelectNode()
 
 fun addNode(node: CoreNode) {
-    graphs.put(node, mutableSetOf<CoreNode>())
-    println(graphs)
+    graphs.put(node, mutableMapOf())
+    lines.put(node, mutableSetOf<BoundLine>())
 }
 
-fun addSubscribe(node: CoreNode, target: CoreNode) {
-    graphs.get(node)?.add(target)
-    println(graphs)
+fun addSubscribe(node: CoreNode, target: CoreNode, nameMetric: String) {
+    graphs.get(node)?.put(target, nameMetric)
+    val line = BoundLine(
+        target.inputMetrics[nameMetric]!!.btn,
+        node.out
+    )
+    lines.get(node)?.add(line)
+    lines.get(target)?.add(line)
+    mainRoot.children.add(line)
+}
+
+fun upgradeLinesPosition(node: CoreNode) {
+     lines.get(node)?.forEach { x ->
+         x.updatePosition()
+     }
 }
 
 
@@ -37,6 +54,8 @@ fun removeNode(node: CoreNode) {
 
 fun shakeTree(startNode: CoreNode) {
     graphs.get(startNode)?.forEach { x ->
-
+        val node = x.key
+        val name = x.value
+        node.inputMetrics[name]?.fn?.let { it(startNode.outValue) }
     }
 }

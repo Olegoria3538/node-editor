@@ -1,25 +1,32 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.scene.layout.GridPane
 
-fun BlurNode(): GridPane {
+fun BlurNode(): CoreNode {
     val node = CoreNode(types.img);
     var imageView: ImageView? = null
-    node.addInputMetrics("kernelSize",  types.int, fn = { x ->
+
+    val inFloat = InputMetric("kernelSize", types.int, "kernelSize", fn = { x ->
         println(x)
     })
-    node.addInputMetrics("image",  "img", fn = { image ->
+
+    val inImage = InputMetric("image", types.img, "image", fn = { image ->
         if(imageView != null)
             node.centerBox.children.remove(imageView)
-        imageView = ImageView(image as WritableImage)
-        imageView!!.setFitHeight(100.0)
-        imageView!!.setFitWidth(100.0)
-        node.centerBox.children.add(0, imageView);
-        node.updateOutValue(image)
+        if(image != null) {
+            imageView = ImageView(image as WritableImage)
+            imageView!!.setFitHeight(100.0)
+            imageView!!.setFitWidth(100.0)
+            node.centerBox.children.add(0, imageView);
+            node.updateOutValue(image)
+        }
     })
-    return node.root
+
+    node.addInputMetrics(inFloat)
+    node.addInputMetrics(inImage)
+
+    return node
 }

@@ -1,31 +1,28 @@
 package GUISamples
 
-import GUISamples.features.nodes.BlurNode
-import GUISamples.features.nodes.FloatNode
+import GUISamples.features.`side-bar`.SideBar
+import GUISamples.features.`side-bar`.sideBarWidth
 import GUISamples.features.nodes.InitImageNode
-import GUISamples.features.nodes.IntNode
+import GUISamples.features.nodes.model.mainRoot
 import javafx.application.Application
 
 import javafx.scene.Scene
-import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.HBox
 import javafx.stage.Stage
+import java.awt.Toolkit
+
+val size = Toolkit.getDefaultToolkit().screenSize
 
 class Screenshot: Application() {
     override fun start(primaryStage: Stage) {
-        var root = AnchorPane()
-        val kek = FloatNode()
-        root.children.add(kek)
+        mainRoot.children.addAll(InitImageNode())
 
-        val kek1 = BlurNode()
-        root.children.add(kek1)
-
-        val kek2 = IntNode()
-        root.children.add(kek2)
-
-        val kek3 = InitImageNode()
-        root.children.add(kek3)
-
-        var scene = Scene(root, 640.0, 480.0)
+        val container = HBox()
+        val sideBar = SideBar()
+        mainRoot.minWidth = size.width.toDouble() - sideBarWidth
+        mainRoot.maxWidth = size.width.toDouble() - sideBarWidth
+        container.children.addAll(mainRoot, sideBar)
+        val scene = Scene(container, size.width.toDouble(), size.height.toDouble())
         primaryStage.scene = scene
         primaryStage.show()
     }
