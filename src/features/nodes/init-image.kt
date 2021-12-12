@@ -38,8 +38,8 @@ fun InitImageNode(): GridPane {
             if(imageView != null)
                 node.centerBox.children.remove(imageView)
             imageView = ImageView(image)
-            imageView!!.setFitHeight(100.0)
-            imageView!!.setFitWidth(100.0)
+            imageView!!.setFitHeight(200.0)
+            imageView!!.setFitWidth(200.0)
             node.centerBox.children.add(0, imageView);
             node.updateOutValue(image)
         }

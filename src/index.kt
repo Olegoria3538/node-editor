@@ -9,12 +9,14 @@ import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.layout.HBox
 import javafx.stage.Stage
+import org.opencv.core.Core
 import java.awt.Toolkit
 
 val size = Toolkit.getDefaultToolkit().screenSize
 
 class Screenshot: Application() {
     override fun start(primaryStage: Stage) {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         mainRoot.children.addAll(InitImageNode())
 
         val container = HBox()

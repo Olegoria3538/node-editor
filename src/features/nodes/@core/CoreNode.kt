@@ -54,9 +54,8 @@ open class CoreNode (val outType: String) {
         val btn = metric.btn
         btn.setBackground(Background(BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)))
         btn.onAction = EventHandler {
-            if (selectNode.node != null && selectNode.node != this && selectNode.node!!.outType == metric.type) {
+            if (isMakeSubscribe(selectNode.node, this, metric)) {
                 addSubscribe(selectNode.node!!, this, metric.name)
-                selectNode.node!!.out.setStyle("")
                 metric.fn(selectNode.node!!.outValue)
                 selectNode.removeSelectNode()
             }
@@ -102,13 +101,13 @@ open class CoreNode (val outType: String) {
         delBtn.onAction = EventHandler { _ ->
             val parent = root.parent as AnchorPane
             parent.children.remove(root)
+            removeNode(this)
         }
 
         val outColor = typeToColor(outType)
         out.setBackground(Background(BackgroundFill(outColor, CornerRadii.EMPTY, Insets.EMPTY)))
         out.onAction = EventHandler {
             selectNode.setSelectNode(this)
-            out.setStyle("-fx-border-color: #f48225; -fx-border-width: 3px;");
         }
         rightBox.children.add(out);
 
