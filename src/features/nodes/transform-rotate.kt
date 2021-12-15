@@ -8,51 +8,56 @@ import GUISamples.features.nodes.utils.matToImage
 import GUISamples.features.nodes.utils.imageToMat
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
+import org.opencv.core.Core
 import org.opencv.core.Mat
-import org.opencv.core.Size
+import org.opencv.core.Point
 import org.opencv.imgproc.Imgproc
 
 
-fun BlurNode(): CoreNode {
+fun TransformRotateNode(): CoreNode {
     val node = CoreNode(types.img);
     val img = CreateImageView()
-
     var image: WritableImage? = null
-    var inputValue = 0.0
+    var angle = 0.0
 
-    fun shot() {
+    fun blur() {
         if(img.imageView != null)
             node.centerBox.children.remove(img.imageView)
         if(image != null) {
-            val src = imageToMat(image as WritableImage)
+            val src = imageToMat(image as WritableImage)!!
+            val dst = Mat()
+            val angleInt = angle.toInt()
 
-            val dst = Mat(src!!.rows(), src!!.cols(), src!!.type())
-            val v = if (inputValue.toInt() % 2 == 0) {
-                inputValue + 1
+            if (angleInt == 90 || angleInt == -270) {
+                Core.transpose(src, dst);
+                Core.flip(dst, dst, 1);
+            } else if (angleInt == 180 || angleInt == -180)
+                Core.flip(src, dst, -1);
+            else if (angleInt == 270 || angleInt == -90) {
+                Core.transpose(src, dst);
+                Core.flip(dst, dst, 0);
             } else {
-                inputValue
+                val rotPoint = Point(src.cols() / 2.0,  src.rows() / 2.0)
+                val rotMat = Imgproc.getRotationMatrix2D(rotPoint, angle, 1.0);
+                Imgproc.warpAffine(src, dst, rotMat, src.size(), Imgproc.WARP_INVERSE_MAP);
             }
-
-            val size = Size(v, v)
-            Imgproc.GaussianBlur(src, dst, size, 0.0)
 
             val writableImage = matToImage(dst)!!
             img.setImageView(writableImage)
             node.centerBox.children.add(0, img.imageView)
-
             node.updateOutValue(writableImage)
         }
     }
 
 
-    val inFloat = InputMetric("kernelSize", types.int, "kernelSize", fn = { x ->
-        inputValue = x.toString().toDouble()
-        shot()
+    val inFloat = InputMetric("transformRotate", types.float, "transformRotate", fn = { x ->
+        angle = x.toString().toDouble()
+        blur()
     })
 
     val inImage = InputMetric("image", types.img, "image", fn = { img ->
         image = img as WritableImage?
-        shot()
+        blur()
     })
 
     node.addInputMetrics(inFloat)

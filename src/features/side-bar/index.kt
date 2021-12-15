@@ -1,11 +1,9 @@
 package GUISamples.features.`side-bar`
 
+import GUISamples.features.nodes.*
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.layout.VBox
-import GUISamples.features.nodes.BlurNode
-import GUISamples.features.nodes.FloatNode
-import GUISamples.features.nodes.IntNode
 import GUISamples.features.nodes.`@core`.CoreNode
 import GUISamples.features.nodes.model.mainRoot
 
@@ -27,6 +25,10 @@ fun SideBar(): VBox {
     createBtn("BlurNode") { BlurNode() }
     createBtn("FloatNode") { FloatNode() }
     createBtn("IntNode") { IntNode() }
+    createBtn("TransformRotateNode") { TransformRotateNode() }
+    createBtn("InvertNode") { InvertNode() }
+    createBtn("BrightnessNode") { BrightnessNode() }
+    createBtn("GrayNode"){GrayNode()}
 
     return container
 }

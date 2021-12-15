@@ -9,44 +9,32 @@ import GUISamples.features.nodes.utils.imageToMat
 import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import org.opencv.core.Mat
-import org.opencv.core.Size
-import org.opencv.imgproc.Imgproc
 
 
-fun BlurNode(): CoreNode {
+fun BrightnessNode(): CoreNode {
     val node = CoreNode(types.img);
     val img = CreateImageView()
 
     var image: WritableImage? = null
-    var inputValue = 0.0
+    var bright = 0.0
 
     fun shot() {
         if(img.imageView != null)
             node.centerBox.children.remove(img.imageView)
         if(image != null) {
-            val src = imageToMat(image as WritableImage)
-
-            val dst = Mat(src!!.rows(), src!!.cols(), src!!.type())
-            val v = if (inputValue.toInt() % 2 == 0) {
-                inputValue + 1
-            } else {
-                inputValue
-            }
-
-            val size = Size(v, v)
-            Imgproc.GaussianBlur(src, dst, size, 0.0)
-
+            val src = imageToMat(image as WritableImage)!!
+            val dst = Mat()
+            src.convertTo(dst, -1, bright);
             val writableImage = matToImage(dst)!!
             img.setImageView(writableImage)
             node.centerBox.children.add(0, img.imageView)
-
             node.updateOutValue(writableImage)
         }
     }
 
 
-    val inFloat = InputMetric("kernelSize", types.int, "kernelSize", fn = { x ->
-        inputValue = x.toString().toDouble()
+    val inFloat = InputMetric("bright", types.float, "bright", fn = { x ->
+        bright = x.toString().toDouble()
         shot()
     })
 

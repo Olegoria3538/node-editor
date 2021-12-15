@@ -1,13 +1,12 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreSimpleInput
+import GUISamples.features.nodes.`@core`.CreateImageView
 import GUISamples.features.nodes.`@core`.CoreNode
 import GUISamples.features.nodes.`@core`.types
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.layout.GridPane
 import javafx.embed.swing.SwingFXUtils
-import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import javafx.stage.FileChooser
 import java.io.IOException
@@ -28,19 +27,17 @@ fun openImage(): WritableImage? {
 }
 
 fun InitImageNode(): GridPane {
-    var imageView: ImageView? = null
+    var img = CreateImageView()
     val node = CoreNode(types.img);
     val btn = Button("Выбрать изоюражение")
     node.centerBox.children.add(btn)
     btn.onAction = EventHandler {
         val image = openImage()
         if(image != null) {
-            if(imageView != null)
-                node.centerBox.children.remove(imageView)
-            imageView = ImageView(image)
-            imageView!!.setFitHeight(200.0)
-            imageView!!.setFitWidth(200.0)
-            node.centerBox.children.add(0, imageView);
+            if(img.imageView != null)
+                node.centerBox.children.remove(img.imageView)
+            img.setImageView(image)
+            node.centerBox.children.add(0, img.imageView);
             node.updateOutValue(image)
         }
     }

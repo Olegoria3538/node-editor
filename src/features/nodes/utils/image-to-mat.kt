@@ -27,11 +27,26 @@ fun imageToMat(image: WritableImage): Mat? {
     return mat
 }
 
-fun Mat2WritableImage(mat: Mat?): WritableImage? {
+fun matToImage(mat: Mat?): WritableImage? {
     val matOfByte = MatOfByte()
     Imgcodecs.imencode(".jpg", mat, matOfByte)
     val byteArray = matOfByte.toArray()
     val `in`: InputStream = ByteArrayInputStream(byteArray)
     val bufImage: BufferedImage = ImageIO.read(`in`)
     return SwingFXUtils.toFXImage(bufImage, null)
+}
+
+fun copyImage(image: WritableImage): WritableImage? {
+    val height = image.getHeight().toInt()
+    val width = image.getWidth().toInt()
+    val pixelReader: PixelReader = image.getPixelReader()
+    val writableImage = WritableImage(width, height)
+    val pixelWriter = writableImage.pixelWriter
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            val color = pixelReader.getColor(x, y)
+            pixelWriter.setColor(x, y, color)
+        }
+    }
+    return writableImage
 }
