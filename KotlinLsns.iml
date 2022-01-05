@@ -23,5 +23,17 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/derussis/opencv/build/bin/opencv-455.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/derussis/opencv/build/bin/opencv-455.jar!/" />
+          <root url="jar://$USER_HOME$/derussis/opencv/build/bin/opencv-455.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -1,5 +1,6 @@
 package GUISamples.features.nodes.`@core`
 
+import GUISamples.features.nodes.model.mainRoot
 import javafx.geometry.Bounds
 import javafx.scene.Node
 import javafx.scene.paint.Color
@@ -28,6 +29,10 @@ class BoundLine(
         setStartY(startBounds.minY)
         setEndX(endBounds.minX)
         setEndY(endBounds.minY)
+    }
+
+    fun removeScene() {
+        mainRoot.children.remove(this)
     }
 
     init {

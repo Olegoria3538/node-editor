@@ -30,10 +30,10 @@ fun addNode(node: CoreNode) {
     lines.put(node, mutableSetOf())
 }
 
-fun addSubscribe(node: CoreNode, target: CoreNode, nameMetric: String) {
-    graphs.get(node)?.put(target, nameMetric)
+fun addSubscribe(node: CoreNode, target: CoreNode, metric: InputMetric) {
+    graphs.get(node)?.put(target, metric.name)
     val line = BoundLine(
-        target.inputMetrics[nameMetric]!!.btn,
+        target.inputMetrics[metric.name]!!.btn,
         node.out
     )
     lines.get(node)?.add(line)
@@ -48,17 +48,30 @@ fun upgradeLinesPosition(node: CoreNode) {
 }
 
 
-fun removeSubscribe(node: CoreNode, target: CoreNode) {
-    graphs.get(node)?.remove(target)
+fun removeSubscribe(node: CoreNode, metric: InputMetric) {
+    graphs.entries.forEach {x ->
+        if(node in x.value && x.value[node] == metric.name) {
+            x.value.remove(node)
+            val line = lines.get(node)?.find { line ->
+                line.start == metric.btn || line.end == metric.btn
+            }
+            if(line != null) {
+                line.removeScene()
+                lines.get(node)?.remove(line)
+                lines.get(x.key)?.remove(line)
+            }
+            node.inputMetrics[metric.name]?.fn?.let { it(null) }
+        }
+    }
 }
 
 fun removeNode(node: CoreNode) {
+    val subscribes = graphs.get(node)
     graphs.remove(node)
     val ar = lines.get(node)
     if(ar != null) {
         ar.forEach { line ->
            val filterAr = lines.filter { x -> x.value.find { q -> q == line } != null && x.key != node }
-            println(filterAr)
             filterAr.forEach { x ->
                 x.value.remove(line)
             }
@@ -66,6 +79,9 @@ fun removeNode(node: CoreNode) {
         }
     }
     lines.remove(node)
+    subscribes?.forEach { x ->
+        x.key.inputMetrics[x.value]?.fn?.let { it(null) }
+    }
 }
 
 fun shakeTree(startNode: CoreNode) {

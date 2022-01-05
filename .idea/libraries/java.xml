@@ -2,9 +2,13 @@
   <library name="java">
     <CLASSES>
       <root url="file://C:/libs/java" />
+      <root url="jar://$USER_HOME$/derussis/opencv/build/bin/opencv-455.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/derussis/opencv/build/bin/opencv-455.jar!/" />
+      <root url="jar://$USER_HOME$/derussis/opencv/build/bin/opencv-455.jar!/" />
+    </SOURCES>
     <jarDirectory url="file://C:/libs/java" recursive="false" />
   </library>
 </component>

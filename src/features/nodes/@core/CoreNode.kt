@@ -10,6 +10,7 @@ import javafx.scene.input.*
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 
+
 class _types {
    val img = "img"
     val int = "int"
@@ -21,7 +22,7 @@ open class CoreNode (val outType: String) {
     val root = GridPane()
     val id = DataFormat(createRandomId(15))
 
-    private val delBtn = Button("Удалить")
+    val delBtn = Button("Удалить")
 
     val header = HBox()
     val leftBox = VBox()
@@ -55,20 +56,26 @@ open class CoreNode (val outType: String) {
         btn.setBackground(Background(BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)))
         btn.onAction = EventHandler {
             if (isMakeSubscribe(selectNode.node, this, metric)) {
-                addSubscribe(selectNode.node!!, this, metric.name)
+                addSubscribe(selectNode.node!!, this, metric)
                 metric.fn(selectNode.node!!.outValue)
                 selectNode.removeSelectNode()
             }
         }
+        btn.setOnMouseClicked(EventHandler<MouseEvent> { mouseEvent ->
+            if (mouseEvent.button.equals(MouseButton.PRIMARY)) {
+                if (mouseEvent.clickCount === 2) {
+                    removeSubscribe(this, metric)
+                }
+            }
+        })
         leftBox.children.add(btn);
     }
 
     init {
-        root.setHgap(10.0);
-        root.setVgap(10.0);
-        root.setGridLinesVisible(true)
-        root.padding = Insets(40.0)
-        root.setBackground(Background(BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)))
+        root.setHgap(20.0)
+        root.setVgap(20.0)
+        root.padding = Insets(20.0)
+        root.setBackground(Background(BackgroundFill(Color.web("rgba(0,0,0,0.3)"), CornerRadii.EMPTY, Insets.EMPTY)))
 
         root.add(header, 1, 0);
         root.add(leftBox, 0, 1);

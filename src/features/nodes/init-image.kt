@@ -29,7 +29,7 @@ fun openImage(): WritableImage? {
 fun InitImageNode(): GridPane {
     var img = CreateImageView()
     val node = CoreNode(types.img);
-    val btn = Button("Выбрать изоюражение")
+    val btn = Button("Выбрать изображение")
     node.centerBox.children.add(btn)
     btn.onAction = EventHandler {
         val image = openImage()
@@ -39,7 +39,10 @@ fun InitImageNode(): GridPane {
             img.setImageView(image)
             node.centerBox.children.add(0, img.imageView);
             node.updateOutValue(image)
+        } else {
+            node.updateOutValue(null)
         }
     }
+    node.footer.children.remove(node.delBtn)
     return node.root
 }

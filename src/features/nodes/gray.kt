@@ -28,6 +28,8 @@ fun GrayNode(): CoreNode {
             img.setImageView(writableImage)
             node.centerBox.children.add(0, img.imageView)
             node.updateOutValue(writableImage)
+        } else {
+            node.updateOutValue(null)
         }
     }
 
