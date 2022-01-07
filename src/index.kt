@@ -18,7 +18,7 @@ val size = Toolkit.getDefaultToolkit().screenSize
 class Screenshot: Application() {
     override fun start(primaryStage: Stage) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        mainRoot.children.addAll(InitImageNode("_start_"), SaveImageNode("_end_"))
+        mainRoot.children.addAll(InitImageNode("_start_").root, SaveImageNode("_end_").root)
 
         val container = HBox()
         val sideBar = SideBar()

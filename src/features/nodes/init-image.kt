@@ -24,7 +24,7 @@ fun openImage(): WritableImage? {
     }
 }
 
-fun InitImageNode(id: String): GridPane {
+fun InitImageNode(id: String): CoreNode {
     var img = CreateImageView()
     val node = CoreNode(typesNode.initImage, id);
     val btn = Button("Выбрать изображение")
@@ -42,5 +42,5 @@ fun InitImageNode(id: String): GridPane {
         }
     }
     node.footer.children.remove(node.delBtn)
-    return node.root
+    return node
 }

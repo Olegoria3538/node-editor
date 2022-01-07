@@ -39,7 +39,7 @@ fun saveImage(image: WritableImage) {
 }
 
 
-fun SaveImageNode(id: String): GridPane {
+fun SaveImageNode(id: String): CoreNode {
     val node = CoreNode(typesNode.saveImage, id);
     val btn = Button("Сохранить изображение")
     var image: WritableImage? = null
@@ -61,5 +61,5 @@ fun SaveImageNode(id: String): GridPane {
     })
     node.addInputMetrics(inImage)
     node.footer.children.remove(node.delBtn)
-    return node.root
+    return node
 }

@@ -107,3 +107,13 @@ fun isMakeSubscribe(node: CoreNode?, target: CoreNode?, metric: InputMetric): Bo
     }
     return flag
 }
+
+fun removeAllScene() {
+    val ids = graphs.keys.map{ x ->
+        x.id
+    }
+    ids.forEach { id ->
+       val f = graphs.keys.find { x -> x.id == id }
+        f?.remove()
+    }
+}
