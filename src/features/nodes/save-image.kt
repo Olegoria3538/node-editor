@@ -51,12 +51,11 @@ fun SaveImageNode(id: String): CoreNode {
     }
     val inImage = InputMetric("image", typesOut.img, "image", fn = { img ->
         image = img as WritableImage?
+        if(imgView.imageView != null)
+            node.centerBox.children.remove(imgView.imageView)
         if(img != null) {
             imgView.setImageView(img)
             node.centerBox.children.add(0, imgView.imageView)
-        } else {
-            if(imgView.imageView != null)
-                node.centerBox.children.remove(imgView.imageView)
         }
     })
     node.addInputMetrics(inImage)
