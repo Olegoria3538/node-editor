@@ -1,7 +1,6 @@
 package GUISamples.features.nodes.`@core`
 
 import GUISamples.features.nodes.model.*
-import GUISamples.features.nodes.utils.createRandomId
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Point2D
@@ -11,16 +10,42 @@ import javafx.scene.layout.*
 import javafx.scene.paint.Color
 
 
-class _types {
+class _typesOutNode {
    val img = "img"
     val int = "int"
     val float = "float"
 }
-val types = _types()
+val typesOut = _typesOutNode()
 
-open class CoreNode (val outType: String) {
+class _nodeTypes {
+    val blur = "blur"
+    val brightness = "brightness"
+    val float = "float"
+    val gray = "gray"
+    val initImage = "initImage"
+    val int = "int"
+    val invert = "invert"
+    val saveImage = "saveImage"
+    val transformRotate = "transformRotate"
+}
+
+val typesNode = _nodeTypes()
+val nodeTypes = mapOf<String, String?>(
+    typesNode.blur to typesOut.img,
+    typesNode.brightness  to typesOut.img,
+    typesNode.float to typesOut.float,
+    typesNode.gray  to typesOut.img,
+    typesNode.initImage to typesOut.img,
+    typesNode.int to typesOut.int,
+    typesNode.invert to typesOut.img,
+    typesNode.saveImage to null,
+    typesNode.transformRotate to typesOut.img,
+)
+
+open class CoreNode (val nodeType: String, val id: String) {
     val root = GridPane()
-    val id = DataFormat(createRandomId(15))
+    val idDataFormat = DataFormat(id)
+    val outType = nodeTypes[nodeType]
 
     val delBtn = Button("Удалить")
 
@@ -42,9 +67,9 @@ open class CoreNode (val outType: String) {
 
     fun typeToColor(type: String): Color {
         return when (type) {
-            types.float -> Color.YELLOW
-            types.int -> Color.BLUE
-            types.img -> Color.CHOCOLATE
+            typesOut.float -> Color.YELLOW
+            typesOut.int -> Color.BLUE
+            typesOut.img -> Color.CHOCOLATE
             else -> Color.RED
         }
     }
@@ -98,7 +123,7 @@ open class CoreNode (val outType: String) {
             val b = event.source as GridPane
             b.parent.onDragOver = mContextDragOver
             val content = ClipboardContent()
-            content[id] = 1
+            content[idDataFormat] = 1
             b.startDragAndDrop(*TransferMode.ANY).setContent(content)
             event.consume()
         }
@@ -111,12 +136,14 @@ open class CoreNode (val outType: String) {
             removeNode(this)
         }
 
-        val outColor = typeToColor(outType)
-        out.setBackground(Background(BackgroundFill(outColor, CornerRadii.EMPTY, Insets.EMPTY)))
-        out.onAction = EventHandler {
-            selectNode.setSelectNode(this)
+        if(outType != null) {
+            val outColor = typeToColor(outType)
+            out.setBackground(Background(BackgroundFill(outColor, CornerRadii.EMPTY, Insets.EMPTY)))
+            out.onAction = EventHandler {
+                selectNode.setSelectNode(this)
+            }
+            rightBox.children.add(out);
         }
-        rightBox.children.add(out);
 
         addNode(this)
     }

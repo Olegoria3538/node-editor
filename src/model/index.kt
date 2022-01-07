@@ -97,7 +97,7 @@ fun isMakeSubscribe(node: CoreNode?, target: CoreNode?, metric: InputMetric): Bo
             target != null &&
             node != target &&
             node.outType == metric.type
-    if(!flag) return  false
+    if(!flag) return false
     graphs.values.forEach { x ->
             x.forEach { x ->
                 if (x.key == target && x.value == metric.name) {

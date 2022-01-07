@@ -1,8 +1,6 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CreateImageView
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.layout.GridPane
@@ -26,9 +24,9 @@ fun openImage(): WritableImage? {
     }
 }
 
-fun InitImageNode(): GridPane {
+fun InitImageNode(id: String): GridPane {
     var img = CreateImageView()
-    val node = CoreNode(types.img);
+    val node = CoreNode(typesNode.initImage, id);
     val btn = Button("Выбрать изображение")
     node.centerBox.children.add(btn)
     btn.onAction = EventHandler {

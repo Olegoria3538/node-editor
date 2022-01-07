@@ -1,20 +1,16 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.CreateImageView
-import GUISamples.features.nodes.`@core`.InputMetric
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 import GUISamples.features.nodes.utils.matToImage
 import GUISamples.features.nodes.utils.imageToMat
-import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import org.opencv.core.Mat
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
 
 
-fun BlurNode(): CoreNode {
-    val node = CoreNode(types.img);
+fun BlurNode(id: String): CoreNode {
+    val node = CoreNode(typesNode.blur, id)
     val img = CreateImageView()
 
     var image: WritableImage? = null
@@ -47,12 +43,12 @@ fun BlurNode(): CoreNode {
     }
 
 
-    val inFloat = InputMetric("kernelSize", types.int, "kernelSize", fn = { x ->
+    val inFloat = InputMetric("kernelSize", typesOut.int, "kernelSize", fn = { x ->
         inputValue = x.toString().toDouble()
         shot()
     })
 
-    val inImage = InputMetric("image", types.img, "image", fn = { img ->
+    val inImage = InputMetric("image", typesOut.img, "image", fn = { img ->
         image = img as WritableImage?
         shot()
     })

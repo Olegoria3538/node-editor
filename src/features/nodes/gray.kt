@@ -1,19 +1,15 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.CreateImageView
-import GUISamples.features.nodes.`@core`.InputMetric
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 import GUISamples.features.nodes.utils.matToImage
 import GUISamples.features.nodes.utils.imageToMat
-import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 
 
-fun GrayNode(): CoreNode {
-    val node = CoreNode(types.img);
+fun GrayNode(id: String): CoreNode {
+    val node = CoreNode(typesNode.gray, id);
     val img = CreateImageView()
     var image: WritableImage? = null
 
@@ -33,7 +29,7 @@ fun GrayNode(): CoreNode {
         }
     }
 
-    val inImage = InputMetric("image", types.img, "image", fn = { img ->
+    val inImage = InputMetric("image", typesOut.img, "image", fn = { img ->
         image = img as WritableImage?
         shot()
     })

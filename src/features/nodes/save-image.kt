@@ -1,9 +1,6 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.CreateImageView
-import GUISamples.features.nodes.`@core`.InputMetric
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.layout.GridPane
@@ -42,8 +39,8 @@ fun saveImage(image: WritableImage) {
 }
 
 
-fun saveImageNode(): GridPane {
-    val node = CoreNode(types.img);
+fun SaveImageNode(id: String): GridPane {
+    val node = CoreNode(typesNode.saveImage, id);
     val btn = Button("Сохранить изображение")
     var image: WritableImage? = null
     val imgView = CreateImageView()
@@ -52,7 +49,7 @@ fun saveImageNode(): GridPane {
     btn.onAction = EventHandler {
         image?.let { saveImage(it) }
     }
-    val inImage = InputMetric("image", types.img, "image", fn = { img ->
+    val inImage = InputMetric("image", typesOut.img, "image", fn = { img ->
         image = img as WritableImage?
         if(img != null) {
             imgView.setImageView(img)
@@ -63,9 +60,6 @@ fun saveImageNode(): GridPane {
         }
     })
     node.addInputMetrics(inImage)
-
-    node.rightBox.children.remove(node.out)
     node.footer.children.remove(node.delBtn)
-
     return node.root
 }

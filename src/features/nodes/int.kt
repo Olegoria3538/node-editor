@@ -1,13 +1,8 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.CreateInputInt
-import GUISamples.features.nodes.`@core`.CoreSimpleInput
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 
-import javafx.scene.layout.GridPane
-
-fun IntNode(): CoreNode {
+fun IntNode(id: String): CoreNode {
     val field = CreateInputInt(name = "kek")
-    return CoreSimpleInput(field, types.int).node
+    return CoreSimpleInput(field, typesNode.int, id).node
 }

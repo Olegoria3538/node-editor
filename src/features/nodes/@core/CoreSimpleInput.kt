@@ -1,7 +1,7 @@
 package GUISamples.features.nodes.`@core`
 
-class CoreSimpleInput <T> (input: CreateInputCore<T>, outType: String)  {
-    val node = CoreNode(outType)
+class CoreSimpleInput <T> (input: CreateInputCore<T>, outType: String, id: String)  {
+    val node = CoreNode(outType, id)
     init {
         node.updateOutValue(input.value as Any)
         input.addWatcher { x ->

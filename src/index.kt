@@ -4,7 +4,7 @@ import GUISamples.features.`side-bar`.SideBar
 import GUISamples.features.`side-bar`.sideBarWidth
 import GUISamples.features.nodes.InitImageNode
 import GUISamples.features.nodes.model.mainRoot
-import GUISamples.features.nodes.saveImageNode
+import GUISamples.features.nodes.SaveImageNode
 import javafx.application.Application
 
 import javafx.scene.Scene
@@ -18,7 +18,7 @@ val size = Toolkit.getDefaultToolkit().screenSize
 class Screenshot: Application() {
     override fun start(primaryStage: Stage) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        mainRoot.children.addAll(InitImageNode(), saveImageNode())
+        mainRoot.children.addAll(InitImageNode("_start_"), SaveImageNode("_end_"))
 
         val container = HBox()
         val sideBar = SideBar()

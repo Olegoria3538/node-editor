@@ -1,12 +1,8 @@
 package GUISamples.features.nodes
 
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.CreateImageView
-import GUISamples.features.nodes.`@core`.InputMetric
-import GUISamples.features.nodes.`@core`.types
+import GUISamples.features.nodes.`@core`.*
 import GUISamples.features.nodes.utils.matToImage
 import GUISamples.features.nodes.utils.imageToMat
-import javafx.scene.image.ImageView
 import javafx.scene.image.WritableImage
 import org.opencv.core.Core
 import org.opencv.core.Mat
@@ -14,8 +10,8 @@ import org.opencv.core.Point
 import org.opencv.imgproc.Imgproc
 
 
-fun TransformRotateNode(): CoreNode {
-    val node = CoreNode(types.img);
+fun TransformRotateNode(id: String): CoreNode {
+    val node = CoreNode(typesNode.transformRotate, id);
     val img = CreateImageView()
     var image: WritableImage? = null
     var angle = 0.0
@@ -52,12 +48,12 @@ fun TransformRotateNode(): CoreNode {
     }
 
 
-    val inFloat = InputMetric("transformRotate", types.float, "transformRotate", fn = { x ->
+    val inFloat = InputMetric("transformRotate", typesOut.float, "transformRotate", fn = { x ->
         angle = x.toString().toDouble()
         blur()
     })
 
-    val inImage = InputMetric("image", types.img, "image", fn = { img ->
+    val inImage = InputMetric("image", typesOut.img, "image", fn = { img ->
         image = img as WritableImage?
         blur()
     })
