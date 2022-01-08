@@ -9,7 +9,7 @@ import org.opencv.imgproc.Imgproc
 
 
 fun GrayNode(id: String): CoreNode {
-    val node = CoreNode(nodesTypes.gray, id, "Gray");
+    val node = CreateNode(nodesTypes.gray, id);
     val img = CreateImageView()
     var image: WritableImage? = null
 

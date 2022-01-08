@@ -11,44 +11,9 @@ import javafx.scene.input.*
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
 
-
-class _typesOutNode {
-   val img = "img"
-    val int = "int"
-    val float = "float"
-}
-val typesOut = _typesOutNode()
-
-class _nodeTypes {
-    val blur = "blur"
-    val brightness = "brightness"
-    val float = "float"
-    val gray = "gray"
-    val initImage = "initImage"
-    val int = "int"
-    val invert = "invert"
-    val saveImage = "saveImage"
-    val transformRotate = "transformRotate"
-}
-
-val nodesTypes = _nodeTypes()
-val nodeTypesToOut = mapOf<String, String?>(
-    nodesTypes.blur to typesOut.img,
-    nodesTypes.brightness  to typesOut.img,
-    nodesTypes.float to typesOut.float,
-    nodesTypes.gray  to typesOut.img,
-    nodesTypes.initImage to typesOut.img,
-    nodesTypes.int to typesOut.int,
-    nodesTypes.invert to typesOut.img,
-    nodesTypes.saveImage to null,
-    nodesTypes.transformRotate to typesOut.img
-)
-
-open class CoreNode (val nodeType: String, val id: String, val title: String) {
+open class CoreNode (val nodeType: String, val outType: String?, val id: String) {
     val root = GridPane()
     val idDataFormat = DataFormat(createRandomId(15))
-    val outType = nodeTypesToOut[nodeType]
-
 
     val delBtn = Button("Удалить")
 
@@ -61,29 +26,17 @@ open class CoreNode (val nodeType: String, val id: String, val title: String) {
     var outValue: Any? = null
     val out = Button()
 
-    val inputMetrics = mutableMapOf<String, InputMetric>()
+    val inputMetrics = mutableMapOf<String, InputMetricCore>()
     val fields = mutableMapOf<String, CreateInputCore<Any>>()
-
 
     fun updateOutValue(x: Any?) {
         outValue = x
         shakeTree(this)
     }
 
-    fun typeToColor(type: String): Color {
-        return when (type) {
-            typesOut.float -> Color.YELLOW
-            typesOut.int -> Color.BLUE
-            typesOut.img -> Color.CHOCOLATE
-            else -> Color.RED
-        }
-    }
-
-    fun addInputMetrics(metric: InputMetric) {
+    fun addInputMetrics(metric: InputMetricCore) {
         inputMetrics.put(metric.name, metric)
-        val color = typeToColor(metric.type)
         val btn = metric.btn
-        btn.setBackground(Background(BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)))
         btn.onAction = EventHandler {
             if (isMakeSubscribe(selectNode.node, this, metric)) {
                 addSubscribe(selectNode.node!!, this, metric)
@@ -147,16 +100,6 @@ open class CoreNode (val nodeType: String, val id: String, val title: String) {
         delBtn.onAction = EventHandler { _ ->
             remove()
         }
-
-        if(outType != null) {
-            val outColor = typeToColor(outType)
-            out.setBackground(Background(BackgroundFill(outColor, CornerRadii.EMPTY, Insets.EMPTY)))
-            out.onAction = EventHandler {
-                selectNode.setSelectNode(this)
-            }
-            rightBox.children.add(out);
-        }
-        header.children.add(Label(title))
 
         addNode(this)
     }

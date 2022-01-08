@@ -10,7 +10,7 @@ import org.opencv.imgproc.Imgproc
 
 
 fun BlurNode(id: String): CoreNode {
-    val node = CoreNode(nodesTypes.blur, id, "Blur")
+    val node = CreateNode(nodesTypes.blur, id)
     val img = CreateImageView()
 
     var image: WritableImage? = null

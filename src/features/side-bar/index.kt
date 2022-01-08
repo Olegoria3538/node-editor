@@ -2,7 +2,6 @@ package GUISamples.features.`side-bar`
 
 import GUISamples.features.nodes.*
 import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.nodesTypes
 import GUISamples.features.nodes.model.*
 import GUISamples.features.nodes.utils.createRandomId
 import com.google.gson.Gson
@@ -24,18 +23,6 @@ fun SideBar(): VBox {
     container.minWidth = sideBarWidth
     container.maxWidth = sideBarWidth
 
-    fun createBtn (title: String, typeNode: String): Button {
-        val btn = Button(title)
-        btn.minWidth = sideBarWidth
-        btn.onAction = EventHandler { _ ->
-           val node = nodesMap[typeNode]?.let { it(createRandomId(7)) }
-            if(node != null)
-                mainRoot.children.add(node.root)
-        }
-        container.children.add(btn)
-        return btn
-    }
-
     fun createSpacer(height: Double) {
         val spacer = VBox(5.0)
         spacer.minHeight = height
@@ -43,14 +30,19 @@ fun SideBar(): VBox {
         container.children.add(spacer)
     }
 
-    createBtn("BlurNode", nodesTypes.blur)
-    createBtn("TransformRotateNode", nodesTypes.transformRotate)
-    createBtn("InvertNode", nodesTypes.invert)
-    createBtn("BrightnessNode", nodesTypes.brightness)
-    createBtn("GrayNode", nodesTypes.gray)
-    createSpacer(30.0)
-    createBtn("FloatNode", nodesTypes.float)
-    createBtn("IntNode", nodesTypes.int)
+    val nodesGuard = HashMap(nodesMap)
+    nodesGuard.remove(nodesTypes.initImage)
+    nodesGuard.remove(nodesTypes.saveImage)
+    nodesGuard.values.forEach { x ->
+        val btn = Button(x.title)
+        btn.minWidth = sideBarWidth
+        btn.onAction = EventHandler { _ ->
+            val node = x.fn(createRandomId(7))
+            mainRoot.children.add(node.root)
+        }
+        container.children.add(btn)
+    }
+
 
     createSpacer(100.0)
 
@@ -138,7 +130,7 @@ fun openScene() {
                 val nodeType = x.get("nodeType") as String?
                 val positionX = x.get("positionX") as String?
                 val positionY = x.get("positionY") as String?
-                val node = nodesMap[nodeType]?.let { it(id) } as CoreNode?
+                val node = nodesMap[nodeType]?.fn?.let { it(id) }
                 if(node != null) {
                     nodesHash[id] = node
                     mainRoot.children.add(node.root)

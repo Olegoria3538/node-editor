@@ -25,7 +25,7 @@ fun openImage(): WritableImage? {
 
 fun InitImageNode(id: String): CoreNode {
     var img = CreateImageView()
-    val node = CoreNode(nodesTypes.initImage, id, "InitImage");
+    val node = CreateNode(nodesTypes.initImage, id);
     val btn = Button("Выбрать изображение")
     node.centerBox.children.add(btn)
     btn.onAction = EventHandler {

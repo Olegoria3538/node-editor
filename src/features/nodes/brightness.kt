@@ -8,7 +8,7 @@ import org.opencv.core.Mat
 
 
 fun BrightnessNode(id: String): CoreNode {
-    val node = CoreNode(nodesTypes.brightness, id, "Brightness");
+    val node = CreateNode(nodesTypes.brightness, id);
     val img = CreateImageView()
 
     var image: WritableImage? = null

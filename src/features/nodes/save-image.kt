@@ -39,7 +39,7 @@ fun saveImage(image: WritableImage) {
 
 
 fun SaveImageNode(id: String): CoreNode {
-    val node = CoreNode(nodesTypes.saveImage, id, "SaveImage");
+    val node = CreateNode(nodesTypes.saveImage, id);
     val btn = Button("Сохранить изображение")
     var image: WritableImage? = null
     val imgView = CreateImageView()

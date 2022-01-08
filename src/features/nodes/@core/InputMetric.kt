@@ -2,7 +2,7 @@ package GUISamples.features.nodes.`@core`
 
 import javafx.scene.control.Button
 
-class InputMetric (
+open class InputMetricCore (
     val name: String,
     val type: String,
     text: String,

@@ -1,7 +1,5 @@
 package GUISamples.features.nodes.model
-import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.BoundLine
-import GUISamples.features.nodes.`@core`.InputMetric
+import GUISamples.features.nodes.`@core`.*
 
 import javafx.scene.layout.AnchorPane
 
@@ -30,7 +28,7 @@ fun addNode(node: CoreNode) {
     lines.put(node, mutableSetOf())
 }
 
-fun addSubscribe(node: CoreNode, target: CoreNode, metric: InputMetric) {
+fun addSubscribe(node: CoreNode, target: CoreNode, metric: InputMetricCore) {
     graphs.get(node)?.put(target, metric.name)
     val line = BoundLine(
         target.inputMetrics[metric.name]!!.btn,
@@ -48,7 +46,7 @@ fun upgradeLinesPosition(node: CoreNode) {
 }
 
 
-fun removeSubscribe(node: CoreNode, metric: InputMetric) {
+fun removeSubscribe(node: CoreNode, metric: InputMetricCore) {
     graphs.entries.forEach {x ->
         if(node in x.value && x.value[node] == metric.name) {
             x.value.remove(node)
@@ -92,11 +90,13 @@ fun shakeTree(startNode: CoreNode) {
     }
 }
 
-fun isMakeSubscribe(node: CoreNode?, target: CoreNode?, metric: InputMetric): Boolean {
+fun isMakeSubscribe(node: CoreNode?, target: CoreNode?, metric: InputMetricCore): Boolean {
     var flag = node != null &&
             target != null &&
             node != target &&
             node.outType == metric.type
+    println(node?.outType)
+    println(metric.type)
     if(!flag) return false
     graphs.values.forEach { x ->
             x.forEach { x ->
