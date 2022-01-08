@@ -11,7 +11,7 @@ import org.opencv.imgproc.Imgproc
 
 
 fun TransformRotateNode(id: String): CoreNode {
-    val node = CoreNode(typesNode.transformRotate, id);
+    val node = CoreNode(nodesTypes.transformRotate, id, "TransformRotate");
     val img = CreateImageView()
     var image: WritableImage? = null
     var angle = 0.0

@@ -7,7 +7,7 @@ import org.opencv.core.*
 
 
 fun InvertNode(id: String): CoreNode {
-    val node = CoreNode(typesNode.invert, id);
+    val node = CoreNode(nodesTypes.invert, id, "Invert");
     val img = CreateImageView()
     var image: WritableImage? = null
 

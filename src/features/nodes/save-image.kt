@@ -3,7 +3,6 @@ package GUISamples.features.nodes
 import GUISamples.features.nodes.`@core`.*
 import javafx.event.EventHandler
 import javafx.scene.control.Button
-import javafx.scene.layout.GridPane
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.image.WritableImage
 import javafx.stage.FileChooser
@@ -40,7 +39,7 @@ fun saveImage(image: WritableImage) {
 
 
 fun SaveImageNode(id: String): CoreNode {
-    val node = CoreNode(typesNode.saveImage, id);
+    val node = CoreNode(nodesTypes.saveImage, id, "SaveImage");
     val btn = Button("Сохранить изображение")
     var image: WritableImage? = null
     val imgView = CreateImageView()

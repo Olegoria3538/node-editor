@@ -6,6 +6,7 @@ import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.geometry.Point2D
 import javafx.scene.control.Button
+import javafx.scene.control.Label
 import javafx.scene.input.*
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
@@ -30,23 +31,23 @@ class _nodeTypes {
     val transformRotate = "transformRotate"
 }
 
-val typesNode = _nodeTypes()
-val nodeTypes = mapOf<String, String?>(
-    typesNode.blur to typesOut.img,
-    typesNode.brightness  to typesOut.img,
-    typesNode.float to typesOut.float,
-    typesNode.gray  to typesOut.img,
-    typesNode.initImage to typesOut.img,
-    typesNode.int to typesOut.int,
-    typesNode.invert to typesOut.img,
-    typesNode.saveImage to null,
-    typesNode.transformRotate to typesOut.img
+val nodesTypes = _nodeTypes()
+val nodeTypesToOut = mapOf<String, String?>(
+    nodesTypes.blur to typesOut.img,
+    nodesTypes.brightness  to typesOut.img,
+    nodesTypes.float to typesOut.float,
+    nodesTypes.gray  to typesOut.img,
+    nodesTypes.initImage to typesOut.img,
+    nodesTypes.int to typesOut.int,
+    nodesTypes.invert to typesOut.img,
+    nodesTypes.saveImage to null,
+    nodesTypes.transformRotate to typesOut.img
 )
 
-open class CoreNode (val nodeType: String, val id: String) {
+open class CoreNode (val nodeType: String, val id: String, val title: String) {
     val root = GridPane()
     val idDataFormat = DataFormat(createRandomId(15))
-    val outType = nodeTypes[nodeType]
+    val outType = nodeTypesToOut[nodeType]
 
 
     val delBtn = Button("Удалить")
@@ -61,6 +62,8 @@ open class CoreNode (val nodeType: String, val id: String) {
     val out = Button()
 
     val inputMetrics = mutableMapOf<String, InputMetric>()
+    val fields = mutableMapOf<String, CreateInputCore<Any>>()
+
 
     fun updateOutValue(x: Any?) {
         outValue = x
@@ -153,6 +156,7 @@ open class CoreNode (val nodeType: String, val id: String) {
             }
             rightBox.children.add(out);
         }
+        header.children.add(Label(title))
 
         addNode(this)
     }

@@ -2,7 +2,7 @@ package GUISamples.features.`side-bar`
 
 import GUISamples.features.nodes.*
 import GUISamples.features.nodes.`@core`.CoreNode
-import GUISamples.features.nodes.`@core`.typesNode
+import GUISamples.features.nodes.`@core`.nodesTypes
 import GUISamples.features.nodes.model.*
 import GUISamples.features.nodes.utils.createRandomId
 import com.google.gson.Gson
@@ -35,18 +35,24 @@ fun SideBar(): VBox {
         container.children.add(btn)
         return btn
     }
-    createBtn("BlurNode", typesNode.blur)
-    createBtn("FloatNode", typesNode.float)
-    createBtn("IntNode", typesNode.int)
-    createBtn("TransformRotateNode", typesNode.transformRotate)
-    createBtn("InvertNode", typesNode.invert)
-    createBtn("BrightnessNode", typesNode.brightness)
-    createBtn("GrayNode", typesNode.gray)
 
-    val spacer = VBox(5.0)
-    spacer.minHeight = 100.0
-    spacer.maxHeight = 100.0
-    container.children.add(spacer)
+    fun createSpacer(height: Double) {
+        val spacer = VBox(5.0)
+        spacer.minHeight = height
+        spacer.maxHeight = height
+        container.children.add(spacer)
+    }
+
+    createBtn("BlurNode", nodesTypes.blur)
+    createBtn("TransformRotateNode", nodesTypes.transformRotate)
+    createBtn("InvertNode", nodesTypes.invert)
+    createBtn("BrightnessNode", nodesTypes.brightness)
+    createBtn("GrayNode", nodesTypes.gray)
+    createSpacer(30.0)
+    createBtn("FloatNode", nodesTypes.float)
+    createBtn("IntNode", nodesTypes.int)
+
+    createSpacer(100.0)
 
     val btnSaveScene = Button("Сохранить сцену")
     btnSaveScene.minWidth = sideBarWidth
@@ -66,6 +72,7 @@ fun SideBar(): VBox {
 
 
 fun saveScene() {
+    println(graphs.keys.toList()[0].inputMetrics)
     val format = mapOf(
         "nodes" to graphs.keys.map { x ->
             mapOf(
@@ -73,6 +80,9 @@ fun saveScene() {
                 "id" to x.id,
                 "positionX" to x.root.localToParentTransform.tx.toString(),
                 "positionY" to x.root.localToParentTransform.ty.toString(),
+                "fields" to x.fields.map { x ->
+                    mapOf(x.key to x.value.value)
+                }
             )
         },
         "subscribes" to graphs.map { x ->
@@ -118,15 +128,16 @@ fun openScene() {
         val content =  String(encoded, Charset.defaultCharset())
         val gson = Gson()
         val json = gson.fromJson(content, Map::class.java)
-        val nodes = json.get("nodes") as List<Map<String, String>>?
+        val nodes = json.get("nodes") as List<Map<String, Any>>?
         if(nodes != null) {
             removeAllScene()
             val nodesHash = mutableMapOf<String, CoreNode>()
+            //добавляем ноды на сцену
             nodes?.forEach { x ->
                 val id = x.get("id") as String
-                val nodeType = x.get("nodeType")
-                val positionX = x.get("positionX")
-                val positionY = x.get("positionY")
+                val nodeType = x.get("nodeType") as String?
+                val positionX = x.get("positionX") as String?
+                val positionY = x.get("positionY") as String?
                 val node = nodesMap[nodeType]?.let { it(id) } as CoreNode?
                 if(node != null) {
                     nodesHash[id] = node
@@ -137,6 +148,7 @@ fun openScene() {
                 }
             }
             val subscribes = json.get("subscribes") as List<Map<String, String>>?
+            //создаем подписчков
             subscribes?.forEach { x ->
                 val id = x.get("id") as String
                 val targets = x.get("targets") as List<Map<String, String>>?
@@ -150,6 +162,24 @@ fun openScene() {
                             val metric = nodeEnd?.inputMetrics?.get(linkName)
                             if(metric != null) {
                                 addSubscribe(nodeStart, nodeEnd, metric)
+                            }
+                        }
+                    }
+                }
+            }
+            //изменяем значения филдов
+            nodes?.forEach { x ->
+                val id = x.get("id") as String
+                val fields = x.get("fields") as List<Map<String, Any>>?
+                val node = nodesHash[id]
+                if(node != null) {
+                    if(fields != null) {
+                        fields.forEach { x ->
+                            x.forEach { x ->
+                                val field = node.fields[x.key]
+                                if(field != null){
+                                    field.input.textProperty().value = field.onChange(x.value.toString()).toString()
+                                }
                             }
                         }
                     }
