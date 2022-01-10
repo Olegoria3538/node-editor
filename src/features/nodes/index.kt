@@ -24,6 +24,7 @@ fun typeMetricToColor(type: String): Color {
         typesOut.float -> Color.YELLOW
         typesOut.int -> Color.BLUE
         typesOut.img -> Color.CHOCOLATE
+        typesOut.string -> Color.GREEN
         else -> Color.RED
     }
 }
@@ -32,6 +33,7 @@ class _typesOutNode {
     val img = "img"
     val int = "int"
     val float = "float"
+    val string = "string"
     val none = null
 }
 val typesOut = _typesOutNode()
@@ -46,6 +48,8 @@ class _nodeTypes {
     val invert = "invert"
     val saveImage = "saveImage"
     val transformRotate = "transformRotate"
+    val string = "string"
+    val addText = "addText"
 }
 
 val nodesTypes = _nodeTypes()
@@ -54,13 +58,15 @@ class NodesMapTemplate(val fn: (id: String) -> CoreNode, val outType: String?, v
 val nodesMap = hashMapOf(
     nodesTypes.blur to NodesMapTemplate(fn = { x -> BlurNode(x)}, typesOut.img, "Blur"),
     nodesTypes.brightness to NodesMapTemplate(fn = { x -> BrightnessNode(x)}, typesOut.img, "Brightness"),
-    nodesTypes.float to NodesMapTemplate(fn = { x -> FloatNode(x)}, typesOut.float, "Float"),
     nodesTypes.gray to NodesMapTemplate(fn = { x -> GrayNode(x) }, typesOut.img, "Gray"),
     nodesTypes.initImage to NodesMapTemplate(fn = { x -> InitImageNode(x) }, typesOut.img, "Init image"),
-    nodesTypes.int to NodesMapTemplate(fn = { x -> IntNode(x) }, typesOut.int, "Integer"),
     nodesTypes.invert to NodesMapTemplate(fn = { x -> InvertNode(x) }, typesOut.img, "Invert"),
     nodesTypes.saveImage to NodesMapTemplate(fn = { x -> SaveImageNode(x) }, typesOut.none, "Save image"),
     nodesTypes.transformRotate to NodesMapTemplate(fn = { x -> TransformRotateNode(x) }, typesOut.img, "Transform"),
+    nodesTypes.addText to NodesMapTemplate(fn = { x -> AddTextNode(x) }, typesOut.img, "Add text"),
+    nodesTypes.float to NodesMapTemplate(fn = { x -> FloatNode(x)}, typesOut.float, "Float"),
+    nodesTypes.int to NodesMapTemplate(fn = { x -> IntNode(x) }, typesOut.int, "Integer"),
+    nodesTypes.string to NodesMapTemplate(fn = { x -> StringNode(x) }, typesOut.string, "String"),
 )
 
 fun CreateNode(nodeType: String, id: String): CoreNode {
@@ -73,7 +79,11 @@ fun CreateNode(nodeType: String, id: String): CoreNode {
         val outColor = typeMetricToColor(outType)
         node.out.setBackground(Background(BackgroundFill(outColor, CornerRadii.EMPTY, Insets.EMPTY)))
         node.out.onAction = EventHandler {
-            selectNode.setSelectNode(node)
+            if(selectNode.node == node) {
+                selectNode.removeSelectNode()
+            } else {
+                selectNode.setSelectNode(node)
+            }
         }
         node.rightBox.children.add(node.out);
     }
